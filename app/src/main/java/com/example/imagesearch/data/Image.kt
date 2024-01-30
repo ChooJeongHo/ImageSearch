@@ -5,9 +5,7 @@ import java.util.Date
 
 data class Image(
 //    val response: ImageResponse
-    @SerializedName("meta")
     val meta: Meta,
-    @SerializedName("documents")
     val documents: List<Document>
 )
 
