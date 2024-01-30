@@ -1,10 +1,12 @@
 package com.example.imagesearch
 
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
@@ -44,6 +46,10 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
             edit.putString("lastWord", word)
             edit.apply()
             communicateNetWork(binding.etSearch.text.toString())
+
+            // 키보드 내리기
+            val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(binding.etSearch.windowToken, 0)
         }
 
 
