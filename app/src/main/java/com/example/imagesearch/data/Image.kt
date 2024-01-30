@@ -10,10 +10,8 @@ data class Image(
 )
 
 //data class ImageResponse(
-//    @SerializedName("meta")
 //    val meta: Meta,
-//    @SerializedName("documents")
-//    val documents: List<Document>
+//    val documents: MutableList<Document>?
 //)
 
 // 출력 결과

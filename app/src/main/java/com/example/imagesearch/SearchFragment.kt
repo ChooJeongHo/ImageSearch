@@ -10,13 +10,14 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagesearch.data.Document
 import com.example.imagesearch.databinding.FragmentSearchBinding
-import com.example.imagesearch.retrofit.NetWorkClient.imageNetWork
+import com.example.imagesearch.retrofit.NetWorkClient
 import kotlinx.coroutines.launch
 
 class SearchFragment(private val likedImages: MutableList<Document>) : Fragment() {
 
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val imageAdapter by lazy { ImageAdapter(mutableListOf(), likedImages) }
+//    private var documents = mutableListOf<Document>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,12 +51,14 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
 
     // 검색버튼을 누르면 네트워크 통신을 하여 이미지를 가져온다.
     private fun communicateNetWork(query: String) = lifecycleScope.launch(){
-        val response = imageNetWork.getImage(query, "accuracy", 1, 80)
+        val response = NetWorkClient.imageNetWork.getImage(query, "accuracy", 1, 80)
         Log.d("aa", "response: $response")
 
+//        documents = response.response.documents!!
         imageAdapter.imageList.clear()
         imageAdapter.imageList.addAll(response.documents)
         imageAdapter.notifyDataSetChanged()
+
     }
 
 }

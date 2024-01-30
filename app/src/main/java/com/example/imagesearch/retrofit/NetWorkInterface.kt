@@ -2,7 +2,6 @@ package com.example.imagesearch.retrofit
 
 import com.example.imagesearch.data.Image
 import retrofit2.http.GET
-import retrofit2.http.Header
 import retrofit2.http.Query
 
 interface NetWorkInterface {
