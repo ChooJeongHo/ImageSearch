@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 data class Image(
-//    val response: ImageResponse
+//    val response: ImageResponse,
     val meta: Meta,
     val documents: List<Document>
 )

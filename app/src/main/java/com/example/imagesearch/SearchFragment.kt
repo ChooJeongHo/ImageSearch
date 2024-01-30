@@ -57,6 +57,7 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
 //        documents = response.response.documents!!
         imageAdapter.imageList.clear()
         imageAdapter.imageList.addAll(response.documents)
+//        imageAdapter.imageList.addAll(response.response.documents!!)
         imageAdapter.notifyDataSetChanged()
 
     }
