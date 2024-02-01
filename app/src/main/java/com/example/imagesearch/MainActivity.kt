@@ -9,7 +9,7 @@ import com.example.imagesearch.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
-    private var likedImages = mutableListOf<Document>()
+    val likedImages = mutableListOf<Document>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -17,13 +17,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
             btnSearchImage.setOnClickListener {
-                setFragment(SearchFragment(likedImages))
+                setFragment(SearchFragment(this@MainActivity))
             }
             btnMyStorage.setOnClickListener {
-                setFragment(StorageFragment(likedImages))
+                setFragment(StorageFragment(this@MainActivity))
             }
         }
-        setFragment(SearchFragment(likedImages))
+        setFragment(SearchFragment(this@MainActivity))
     }
 
     private fun setFragment(frag : Fragment) {

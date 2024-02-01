@@ -1,5 +1,6 @@
 package com.example.imagesearch
 
+import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
 import android.util.Log
@@ -13,19 +14,20 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.example.imagesearch.data.Document
 import com.example.imagesearch.databinding.FragmentSearchBinding
 import com.example.imagesearch.retrofit.NetWorkClient
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
-class SearchFragment(private val likedImages: MutableList<Document>) : Fragment() {
-
+class SearchFragment(private val mainActivity: MainActivity) : Fragment() {
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
-    private val imageAdapter by lazy { ImageAdapter(mutableListOf(), likedImages) }
-//    private var documents = mutableListOf<Document>()
+    private val imageAdapter by lazy { ImageAdapter(mutableListOf(), mainActivity, this) }
+    private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root // inflater.inflate(R.layout.fragment_search, container, false)
     }
 
@@ -35,6 +37,7 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
         val pref = requireActivity().getSharedPreferences("pref", 0)
         val lastWord = pref.getString("lastWord", "")
         binding.etSearch.setText(lastWord)
+        loadSearchResults()
 
         binding.rvImageList.layoutManager = GridLayoutManager(context, 2)
         binding.rvImageList.adapter = imageAdapter
@@ -45,7 +48,7 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
             val edit = pref.edit()
             edit.putString("lastWord", word)
             edit.apply()
-            communicateNetWork(binding.etSearch.text.toString())
+            communicateNetWork(word)
 
             // 키보드 내리기
             val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
@@ -60,12 +63,32 @@ class SearchFragment(private val likedImages: MutableList<Document>) : Fragment(
         val response = NetWorkClient.imageNetWork.getImage(query, "accuracy", 1, 80)
         Log.d("aa", "response: $response")
 
-//        documents = response.response.documents!!
         imageAdapter.imageList.clear()
         imageAdapter.imageList.addAll(response.documents)
-//        imageAdapter.imageList.addAll(response.response.documents!!)
-        imageAdapter.notifyDataSetChanged()
+        imageAdapter.notifyItemRangeChanged(0, imageAdapter.imageList.size)
+        saveSearchResults()
 
+    }
+
+    // 검색 결과를 저장
+    private fun saveSearchResults() {
+        val prefs = requireActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val editor = prefs.edit()
+        val json = gson.toJson(imageAdapter.imageList)
+        editor.putString("results", json)
+        editor.apply()
+    }
+
+    // 앱을 껐다 켜도 검색 결과를 호출
+    private fun loadSearchResults() {
+        val prefs = requireActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE)
+        val json = prefs.getString("results", null)
+        if (json != null) {
+            val type = object : TypeToken<MutableList<Document>>() {}.type
+            val newList = gson.fromJson<MutableList<Document>>(json, type)
+            imageAdapter.imageList.clear()
+            imageAdapter.imageList.addAll(newList)
+        }
     }
 
 }

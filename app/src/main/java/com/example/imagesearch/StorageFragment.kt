@@ -6,18 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
-import com.example.imagesearch.data.Document
 import com.example.imagesearch.databinding.FragmentStorageBinding
 
-class StorageFragment(private val likedImages: MutableList<Document>) : Fragment() {
+class StorageFragment(private val mainActivity: MainActivity) : Fragment() {
     private val binding by lazy { FragmentStorageBinding.inflate(layoutInflater) }
-    private val imageAdapter by lazy { ImageAdapter(likedImages, likedImages) }
+    private val imageAdapter by lazy { ImageAdapter(mainActivity.likedImages, mainActivity, this) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         return binding.root
     }
 

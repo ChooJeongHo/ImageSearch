@@ -1,7 +1,9 @@
 package com.example.imagesearch
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.imagesearch.data.Document
@@ -9,7 +11,7 @@ import com.example.imagesearch.databinding.ItemImageBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class ImageAdapter(val imageList: MutableList<Document>, private val likedImages: MutableList<Document>) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
+class ImageAdapter(val imageList: MutableList<Document>, private val mainActivity: MainActivity, private val fragment: Fragment) : RecyclerView.Adapter<ImageAdapter.ImageViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ImageAdapter.ImageViewHolder {
         val binding = ItemImageBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -33,23 +35,42 @@ class ImageAdapter(val imageList: MutableList<Document>, private val likedImages
 
         holder.tvDate.text = formattedDate
 
-        // iv_like 클릭하면, 이미지 바뀌고, 보관함에 저장
+        holder.ivLike.visibility = View.GONE
+
+        // iv_like 초기화
+        holder.isLiked = mainActivity.likedImages.contains(currentItem)
+        holder.ivLike.setImageResource(if (holder.isLiked) R.drawable.img_like else R.drawable.img_unlike)
+
+        // iv_like 클릭하면, 이미지 바뀌고, MainActivity 가서 좋아요 리스트에 추가
         holder.ivLike.setOnClickListener {
             holder.isLiked = !holder.isLiked
             if (holder.isLiked) {
-                likedImages.add(currentItem)
-                R.drawable.img_like
+                mainActivity.likedImages.add(currentItem)
+                holder.ivLike.setImageResource(R.drawable.img_like)
             } else {
-                likedImages.remove(currentItem)
-                R.drawable.img_unlike
+                mainActivity.likedImages.remove(currentItem)
+                holder.ivLike.setImageResource(R.drawable.img_unlike)
             }
-            notifyDataSetChanged()
+            notifyItemChanged(position)
         }
 
-        // 좋아요 상태에 따라 iv_like의 이미지 설정
-        holder.isLiked = likedImages.contains(currentItem)
-        val imageResource = if (holder.isLiked) R.drawable.img_like else R.drawable.img_unlike
-        holder.ivLike.setImageResource(imageResource)
+        // 이미지 클릭 이벤트 처리
+        if (fragment is StorageFragment) {
+            holder.itemView.setOnClickListener {
+                mainActivity.likedImages.remove(currentItem)
+                notifyItemRemoved(position)
+                notifyItemRangeChanged(position, imageList.size)
+            }
+            // StorageFragment에서는 좋아요 버튼을 숨김
+            holder.ivLike.visibility = View.GONE
+        } else {
+            // SearchFragment에서는 좋아요 버튼을 보임
+            holder.ivLike.visibility = View.VISIBLE
+        }
+
+        // 현재 Fragment에 따라 좋아요 버튼 설정
+        holder.ivLike.visibility = if (fragment is SearchFragment) View.VISIBLE else View.GONE
+
     }
 
     override fun getItemId(position: Int): Long {
