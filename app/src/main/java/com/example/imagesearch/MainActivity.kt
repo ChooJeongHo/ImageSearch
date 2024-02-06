@@ -17,13 +17,13 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
             btnSearchImage.setOnClickListener {
-                setFragment(SearchFragment(this@MainActivity))
+                setFragment(SearchFragment())
             }
             btnMyStorage.setOnClickListener {
-                setFragment(StorageFragment(this@MainActivity))
+                setFragment(StorageFragment())
             }
         }
-        setFragment(SearchFragment(this@MainActivity))
+        setFragment(SearchFragment())
     }
 
     private fun setFragment(frag : Fragment) {

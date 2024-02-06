@@ -18,9 +18,10 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
-class SearchFragment(private val mainActivity: MainActivity) : Fragment() {
+class SearchFragment() : Fragment() {
     private val binding by lazy { FragmentSearchBinding.inflate(layoutInflater) }
     private val imageAdapter by lazy { ImageAdapter(mutableListOf(), mainActivity, this) }
+    private val mainActivity: MainActivity by lazy { activity as MainActivity }
     private val gson = Gson()
 
     override fun onCreate(savedInstanceState: Bundle?) {
