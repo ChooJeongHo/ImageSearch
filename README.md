@@ -9,5 +9,7 @@
 좋아요를 누르면 해당 이미지가 보관함에 저장되는 구조입니다
 
 
-![Screenshot_20250214_162251](https://github.com/user-attachments/assets/37acdfd5-e7a0-4a18-9ee2-60db510d84c6)
 ![Screenshot_20250214_162159](https://github.com/user-attachments/assets/e965f293-e181-4887-be4b-b514545e5d44)
+
+![Screenshot_20250214_162251](https://github.com/user-attachments/assets/37acdfd5-e7a0-4a18-9ee2-60db510d84c6)
+
